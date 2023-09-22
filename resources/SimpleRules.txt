@@ -1,0 +1,11 @@
+ok /ALRIGHT/
+
+#List of Errors
+#error /FAILURE/
+
+#List of Warnings
+#warning /WARNING/
+
+#Info categories
+start /Entering Build stage./
+start /Entering Test stage./
