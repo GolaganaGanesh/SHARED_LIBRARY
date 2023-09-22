@@ -1,0 +1,26 @@
+<p>When you invoke this shared library it will read the values form
+the pipeline script and reads the all the directories of mesos
+workspace you specified and deletes the contents one after another</p>
+
+<p>following is the way to call library from jenkinsfile</p>
+
+<p>@Library('jenkins_shared_libraries') _ //if you change library name in default configs change it here as well</p>
+<p>deleteMesosworkspace {</p>
+                    
+<p>    delworkspace=["somedir","somedir"]</p>
+<p>}</p>
+
+<p>
+-> call(mesosdir)
+reads variables from the jenkinsfile and passes to the Library
+</p>
+
+<p>
+-> for each workspace delete the directory
+</p>
+
+
+<p><a href='https://bitbucket-eng-sjc1.cisco.com/bitbucket/projects/FIREPOWER/repos/jenkins_shared_libraries/browse'>
+Git repository
+</a>
+</p>

@@ -1,0 +1,30 @@
+# getImsBuild
+
+## Overview
+
+When you invoke the `getImsBuild` step, it will read the parameters set within an 
+upstream job (either `WRAPPER` or `DISTRIBUTABLES`). This provides a mechanism to retrieve the
+latest available build information from an upstream build process.
+
+## Usage
+
+```
+library identifier: 'jenkins_shared_libraries'
+
+getImsBuild upstreamTrigger: "DISTRIBUTABLE"
+```
+
+```
+-> call(input)
+reads variables from the jenkinsfile and passes to the Library
+```
+
+```
+-> getImsBuild()
+By default, will find the nearest "WRAPPER" and retrieve parameters of the last successful build
+```
+
+```
+-> getImsBuild(upstreamTrigger)
+By default, will find the nearest user-specified job and retrieve parameters of the last successful build
+```

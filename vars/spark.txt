@@ -1,0 +1,109 @@
+<p>When you invoke this shared library it will read the values from
+the pipeline script and checks whether a spark room actually exists
+for the current build or not if room exists then reads the json objects
+for the build URL and posts the changelist number,Description and commiters
+information to that spark room to notify those commiters about the build status
+If spark room does not exist, it creats a room and performs rest of the tasks
+like above</p>
+
+<p>following is the way to call library from jenkinsfile</p>
+
+<p>
+@Library('jenkins_shared_libraries')
+spark (
+    product: [required] 
+      - Custom message to denote product. 
+      - Example: "ASA"
+      - Must be provided. No default.
+    branch: [required/optional] 
+      - Name of branch. 
+      - Example: "Tahoe/main". 
+      - Defaults to branchName parameter if present. Required if branchName parameter is not present.
+    swarmReview: [optional]
+      - Number of the review from swarm.
+      - Example: "12345"
+      - Defaults to params.review if it is present. Required if swarmAuthor is used.
+    swarmAuthor: [optional]
+      - CEC of the Author of the review/build.
+      - Example: "lfenu"
+      - Uses params.review to find the author. Required if swarmReview is used.
+    roomName: [optional]
+      - Name of the room to send a message to.
+      - Overrides the standard Product > Branch > Review/Version room name convention.
+      - Example: "ASA Tahoe Offical Builds"
+    version: [optional]
+      - Version number of that particular branch. Used in place of swarm review ID if not present.
+      - Example: "134"
+      - No default.
+    target: [optional]
+      - Target of build
+      - Example: "cisco/x86_64/build/ims/ftd"
+      - No default.
+    message: [optional]
+      - Optional message to include with the spark notification
+      - Example: "ASA Precommit build complete!"
+      - No Default.
+    status: [optional]
+      - Status of the Jenkins job. 
+      - Example: "SUCCESS"
+      - Defaults to currentBuild.result or SUCCESS if that has not already been defined.
+    reviewStatus: [optional]
+      - Status of the Swarm Review that created the job. 
+      - Example: "shelved"/"submitted"
+      - Defaults to using params.status to find review status. 
+    removeRoom: [optional]
+      - Whether or not to remove a room when the review becomes "submitted"
+      - Example: "true"/"false"
+      - Defaults to "false".
+      - To remove a room, removeRoom must be true and reviewStatus must be "submitted". 
+      - You cannot restore a deleted room so be careful with this option.
+    changelist: [optional]
+      - Whether to include the information on the changelist as produced by Jenkins.
+      - Example: "true"/"false"
+      - Defaults to "false"
+    docs: [optional]
+      - Link to any documentation for the prodcut
+      - Example:
+      - No default.
+)
+</p>
+
+<p>
+-> call(body)
+reads variables from the jenkinsfile and passes to the Library
+</p>
+
+<p>
+-> readjobJsonobjects(url)
+read the url of current build job using wget and returns json objects of job as result
+</p>
+
+<p>
+-> getRequest(ID, credentials)
+http get function for reading spark api results
+</p>
+
+<p>
+-> postRequest(ID, theJson, credentials)
+http post function to post payload to the spark api's 
+</p>
+
+<p>
+-> deleteRequest(roomID, credentials)
+http post function to delete a room that is no longer needed.
+</p>
+
+<p>
+-> addChangelist()
+helper function that attempts to add a changelist to the bot's message
+</p>
+
+<p>
+-> getAuthorFromSwarm(ID)
+helper function to get the author from a swarm review id.
+</p>
+
+<p><a href='https://bitbucket-eng-sjc1.cisco.com/bitbucket/projects/FIREPOWER/repos/jenkins_shared_libraries/browse'>
+Git repository
+</a>
+</p>

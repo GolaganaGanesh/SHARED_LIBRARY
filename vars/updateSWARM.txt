@@ -1,0 +1,36 @@
+<p>When you invoke "updateSWARM" shared library it will check if 'update' parameter
+    exists and updates SWARM's review page with the job URL</p>
+
+<p> The {update} callback url accepts a JSON body where you can specify
+        any or all of the following: messages, url, and status.
+<br>for exmaple:
+<pre>
+{
+    "messages" : ["My First Message", "My Second Message"],
+    "url" : "http://jenkins_host:8080/link_to_run",
+    "status": "pass"
+}
+</pre>
+
+<p>Valid test status values are 'running', 'pass', and 'fail'.</p>
+
+<p>For more details about this callback URL and integrate_test_suite can be found in
+<a href=https://www.perforce.com/manuals/swarm-admin/Content/Swarm/admin.integrate_test_suite.htmlSWARM-documention>
+SWARM documenttion</a></p>
+
+<p>following is the way to call library from jenkinsfile</p>
+    <pre>
+      @Library('jenkins_shared_libraries')
+      status = "running" // valid values: 'running', 'pass', or 'fail'.
+      message = "any string"
+      updateSWARM(status, message)
+    </pre>
+
+    <p>If no params provided will set status to 'running' and update Job URL</p>
+    <pre>
+    updateSWARM()
+    </pre>
+
+    <p><a href='https://bitbucket-eng-sjc1.cisco.com/bitbucket/projects/FIREPOWER/repos/jenkins_shared_libraries/browse'>
+    Git repository
+    </a>

@@ -1,0 +1,38 @@
+<p>When you invoke this shared library it will read the values form
+the pipeline script and attempts to kick off a jenkins job with 
+the parameters you specified</p>
+
+<p>following is the way to call library from jenkinsfile</p>
+
+<p>@Library('jenkins_shared_libraries') _ //if you change library name in default configs
+change it here as well</p>
+<p>remoteBuild {</p>
+
+<p>    jenkins="Jenkins/remote/URL"</p>
+<p>    jobName="Name/of/Job"</p>
+<p>    jobToken="Token_for_remote_trigger"</p>
+<p>    auth="Authentication Token"</p>
+<p>    parameters=["PARAM1=var","PARAM2=var2",...]</p>
+<p>}</p>
+
+<p>
+-> call(input)
+reads variables from the jenkinsfile and passes to the Library
+</p>
+
+<p>
+-> build(jenkins, jobName, jobToken, auth, parameters )
+Kicks off a remote build with the given parameters on the jenkins server provided. Job name must be the full name of a job. Job token must match the token for the required job. Auth token must be valid. Parameters are passed in as an array of strings. 
+</p>
+
+<p>
+-> build(jenkins,jobName,jobToken, auth)
+Kicks off a remote build without parameters on the jenkins server provided. Job name must be the full name of a job. Job token must match the token for the required job. Authentication token must be valid.  
+ </p>
+
+
+<p><a href='https://bitbucket-eng-sjc1.cisco.com/bitbucket/projects/FIREPOWER/repos/jenkin
+s_shared_libraries/browse'>
+Git repository
+</a>
+</p>

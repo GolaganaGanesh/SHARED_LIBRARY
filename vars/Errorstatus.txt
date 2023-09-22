@@ -1,0 +1,29 @@
+<p>When you invoke this shared library it will read the values form
+the pipeline script and reads the all the status set strings along with the logfile
+you specified and sets the status accordingly</p>
+
+<p>following is the way to call library from jenkinsfile</p>
+
+<p>@Library('jenkins_shared_libraries') _ //if you change library name in default configs change it here as well</p>
+<p>Errorstatus {</p>
+                    
+<p>    success=["string1","string2",.....]</p>
+<p>    unstable=["string1","string2",.....]</p>
+<p>    failure=["string1","string2",.....]</p>
+<p>    logFile=readFile "logfilename"</p>
+<p>}</p>
+
+<p>
+-> call(ehandle)
+reads variables from the jenkinsfile and passes to the Library
+</p>
+
+<p>
+-> for each string of status type checks the logfile and sets the status accordingly
+</p>
+
+
+<p><a href='https://bitbucket-eng-sjc1.cisco.com/bitbucket/projects/FIREPOWER/repos/jenkins_shared_libraries/browse'>
+Git repository
+</a>
+</p>

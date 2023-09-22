@@ -1,0 +1,3 @@
+<p>This shared library holds constants used by other Jenkinsfiles or libraries.
+You can read the variables by using constants.<variable>.
+For example: constants.WEBEX_API_URL</p>

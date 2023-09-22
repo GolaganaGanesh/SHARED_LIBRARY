@@ -1,0 +1,42 @@
+
+<p>When you invoke this "sendmail" shared library it will read the values from
+the pipeline script. The build metadata info is read for the current build.
+Depending on the status of the build and email notification send out to the
+MAILLIST recipient list and to the committers of the build.
+The changelists displayed in the email notifications are cummulative changes
+since the last successful build.
+</p>
+
+<p>Following is the way to call library from jenkinsfile</p>
+
+<p>@Library('jenkins_shared_libraries') _ //if you change library name in default configs change it here as well</p>
+<p>sendmail{</p>
+<p>    ** REQUIRED **                    
+<p>    Genre = "USM"</p>
+<p>    Branch = "6_3_0-STAGING"</p>
+<p>    Maillist = "um-blr-dev@cisco.com"</p>
+<p>    Ichnaea = "123456" </p> 
+<p>    Version = "6.3.0"</p>
+
+<p>}</p>
+
+<p>
+NOTE : Genre, Branch, Maillist, Ichnaea, Version  are the required variables and 
+       these are mappend to build.gen, build.brn, build.rec, build.ich, build.ver
+       in the shared Library
+
+<p>
+-> call(emailNotify)
+Reads variables from the jenkinsfile and passes to the Library
+</p>
+
+<p>
+-> sendNotification(bld)
+Read the bld variable that has all the metadata information of current build job.
+Depending on the outcome of the build, subject of the notification is created.
+Along with all needed information of the build, changelists, console output (for failed builds),
+the email notification is sent to MAILLIST defined for the branch and committers of the build.
+The changes includes all changelists since the last succesful build.
+</p>
+
+<p><a href='https://bitbucket-eng-sjc1.cisco.com/bitbucket/projects/FIREPOWER/repos/jenkins_shared_libraries/browse'>Git repository</a></p
