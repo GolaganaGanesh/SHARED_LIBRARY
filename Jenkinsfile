@@ -40,7 +40,7 @@ node {
         def BUILD_URL = env.BUILD_URL
         def ACCESS_TOKEN ="ZmYwNmE2Y2UtMTFmZi00ODc2LTgxMDgtNzg4NmJhNjM4YzkzMDI2MzUxOWYtNWE2_PF84_1eb65fdf-9643-417f-9974-ad72cae0e10f"
         def WEBEX_API_URL = "https://webexapis.com/v1"
-        def WEBEX_GROUP_ID = "Y2lzY29zcGFyazovL3VzL1JPT00vYWZlYTU1MjAtNjFiYy0xMWVlLThlMWUtYTU2MDg1NTFkNGZh"
+        def WEBEX_GROUP_ID = "Y2lzY29zcGFyazovL3VzL1JPT00vZmJhOTQzYzAtNDcxYS0xMWVlLWJhNGItYWYxOGFjMzkwN2Ew"
         def Job_triggered_By = ''
         def userId
         if (currentBuild.rawBuild.getCause(hudson.model.Cause$UserIdCause)) {
