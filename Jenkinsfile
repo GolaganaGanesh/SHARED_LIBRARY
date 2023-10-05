@@ -1,5 +1,11 @@
 import groovy.json.JsonOutput
 def stageStatuses = [:]
+def roomFound = false
+def response=""
+def room_ID=''
+def room_name=env.JOB_BASE_NAME
+def botToken = 'ZmYwNmE2Y2UtMTFmZi00ODc2LTgxMDgtNzg4NmJhNjM4YzkzMDI2MzUxOWYtNWE2_PF84_1eb65fdf-9643-417f-9974-ad72cae0e10f'
+def apiUrl = "https://api.ciscospark.com/v1/rooms"
 node {
     try {
         stage('BUILD') {
@@ -37,10 +43,59 @@ node {
         currentBuild.result = 'FAILURE'
         throw e
     } finally {
+        try{
+                        response = sh(script: "curl -H 'Authorization: Bearer ${botToken}' ${apiUrl}", returnStdout: true).trim()
+                        def rooms = new groovy.json.JsonSlurper().parseText(response)
+                        rooms.items.each { room ->
+                            def roomId = room.id
+                            roomName = room.title ?: room.roomTitle  // Use 'title' or 'roomTitle' depending on API response
+                            if (roomName == room_name) {
+                                 roomFound = true
+                                 room_ID = roomId
+                                 echo "SUCCESSFULLY ROOM NAME WAS THERE  ${room_ID}"
+                            }
+                        }
+                    }catch (Exception e) {
+                        echo "this is  not exist"
+                    }
+                    if (roomFound) {
+                            echo "Room '${room_name}' exists."
+                    } else {
+                            echo "Room '${room_name}' not found."
+                            def NEW_ROOM=room_name
+                            def payload = '{"title":"' + NEW_ROOM + '"}'
+                            try{
+                                response = sh(script: "curl -X POST -H 'Authorization: Bearer ${botToken}' -H 'Content-Type: application/json' -d '${payload}' ${apiUrl}", returnStatus: false)
+                            }catch (Exception e) {
+                                echo "room was created "
+                            }
+                            
+                            echo "Stage Name_RESPONSE: ${response}"
+                            if (response == null) {
+                               echo "Webex Teams room '${room_name}' created successfully."
+                               try{
+                                response = sh(script: "curl -H 'Authorization: Bearer ${botToken}' ${apiUrl}", returnStdout: true).trim()
+                                def rooms = new groovy.json.JsonSlurper().parseText(response)
+                                rooms.items.each { room ->
+                                    def roomId = room.id
+                                    roomName = room.title ?: room.roomTitle  // Use 'title' or 'roomTitle' depending on API response
+                                    if (roomName == room_name) {
+                                        room_ID = roomId
+                                        echo "SUCCESSFULLY ROOM NAME WAS CREATED  :  ${room_ID}"
+                                    }
+                                }
+                            }catch (Exception e) {
+                                echo "this is  not exist"
+                            }
+                            } else {
+                               error "Failed to create Webex Teams room. HTTP response code: ${response}"
+                            }
+                    }
         def BUILD_URL = env.BUILD_URL
         def ACCESS_TOKEN ="ZmYwNmE2Y2UtMTFmZi00ODc2LTgxMDgtNzg4NmJhNjM4YzkzMDI2MzUxOWYtNWE2_PF84_1eb65fdf-9643-417f-9974-ad72cae0e10f"
         def WEBEX_API_URL = "https://webexapis.com/v1"
-        def WEBEX_GROUP_ID = "Y2lzY29zcGFyazovL3VzL1JPT00vMDBmZWFiNzAtNWU4Ny0xMWVlLWE1NmMtNDc3MGY3ODlmZTNh"
+        //def WEBEX_GROUP_ID = "Y2lzY29zcGFyazovL3VzL1JPT00vMDBmZWFiNzAtNWU4Ny0xMWVlLWE1NmMtNDc3MGY3ODlmZTNh"
+        def WEBEX_GROUP_ID=room_ID
         def Job_triggered_By = ''
         def userId
         if (currentBuild.rawBuild.getCause(hudson.model.Cause$UserIdCause)) {
@@ -66,7 +121,7 @@ node {
              }' \
             ${WEBEX_API_URL}/memberships
             """
-        def response = sh(script: curlCmd, returnStatus: true)
+        response = sh(script: curlCmd, returnStatus: true)
         if (response == 0) {
              echo "User ${USER_EMAIL} added to Webex group with ID ${WEBEX_GROUP_ID} successfully."
         } else {
@@ -89,7 +144,7 @@ node {
             curl -X POST \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer ZmYwNmE2Y2UtMTFmZi00ODc2LTgxMDgtNzg4NmJhNjM4YzkzMDI2MzUxOWYtNWE2_PF84_1eb65fdf-9643-417f-9974-ad72cae0e10f" \
-            -d '{"roomId": "Y2lzY29zcGFyazovL3VzL1JPT00vMDBmZWFiNzAtNWU4Ny0xMWVlLWE1NmMtNDc3MGY3ODlmZTNh", "markdown": "$message1"}' \
+            -d '{"roomId": "${WEBEX_GROUP_ID}", "markdown": "$message1"}' \
             https://api.ciscospark.com/v1/messages
         """
         echo "Stage Statuses: ${stageStatuses}"
