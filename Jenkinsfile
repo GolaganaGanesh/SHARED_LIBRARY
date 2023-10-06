@@ -138,7 +138,7 @@ node {
             STAGES_STATUS_1 += stageName + ' : ' + status + '\\n '
             echo STAGES_STATUS_1
         }
-        def message1 = "${buildNumber}  >> [${buildResult}](${BUILD_URL}) \\n ${STAGES_STATUS_1}${Job_triggered_By}"
+        def message1 = "${room_name}  >> [${buildResult}](${BUILD_URL}) \\n ${STAGES_STATUS_1}${Job_triggered_By}"
         def message =  "${buildNumber}  >> [${buildResult}](${BUILD_URL}). \\n ${STAGES_STATUS_1}${Job_triggered_By} "
         sh """
             curl -X POST \
